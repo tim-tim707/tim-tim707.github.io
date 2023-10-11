@@ -1,1 +1,68 @@
-<p>Hello world, I'm tim-tim707</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tim's personal website</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  </head>
+  <body>
+    <main>
+        <h1>Unreal Engine 5 Nanite explained</h1>
+        <text>
+            When Nanite got presented by Unreal in 2020<sup><a href="https://youtu.be/qC5KtatMcUw?si=qyiJhpOMmDkylBNa">1</a></sup>, it looked like an exceptional breakthrough for artists.
+            At the time I was still learning Blender and struggled with having a proper mesh density.
+            My amazement for this level of engineering grew with the deep dive presentation at the SIGGRAPH 2021<sup><a href="https://www.youtube.com/watch?v=eviSykqSUUw&ab_channel=SIGGRAPHAdvancesinReal-TimeRendering">2</a></sup>.
+            This fascination lead me to implement a Proof of Concept of the Algorithm based on the pdf, comments an slides provided <a href="https://advances.realtimerendering.com/s2021/Karis_Nanite_SIGGRAPH_Advances_2021_final.pdf">here</a>.
+        </text>
+        <h2>But what is Nanite ?</h2>
+        <text>
+            For those who don't know what Nanite is, here is a recap: Nanite is a "virtual geometry system".
+            Similarily to virtual memory, it is a memory optimisation that allow for much larger 3D mesh and models to be available and be used by a game.
+            This allow for a huge quantity of data that wouldn't be able to fit in RAM to still be rendered in real-time.
+            Goodbye re-topology, mesh optimisation and normal map baking for artists !
+        </text>
+        <h2>My proof of concept</h2>
+        <text>
+            I'm going over many details and missing a lot of interesting reflections that you can find in the <a href="https://advances.realtimerendering.com/s2021/Karis_Nanite_SIGGRAPH_Advances_2021_final.pdf">notes</a> and I can only encourage you to give it a read.
+            It's very different than any "rigorous" scientific paper but much easier to understand.
+            I've also implemented only a subset of the entire solution, and it is nowhere near optimised.
+            I still find the topics encountered along the way interesting.
+        </text>
+        <br><br>
+        <text>
+            Nanite use a Level of Detail (LOD) Hierarchy in order to render only the minimal amount of data.
+            My implementation build the LOD Hierarchy from the bottom up and form a Tree (it's actually a graph, but we'll see that later).
+            We should then start with our base mesh and simplify it incrementally.
+            <br><br>
+            Enter the <a href="https://github.com/sp4cerat/Fast-Quadric-Mesh-Simplification">Fast Quadric Mesh Simplification algorithm</a> available as a C library.
+            The algorithm is described in the following paper: <a href="https://www.cs.cmu.edu/~./garland/Papers/quadrics.pdf">Surface Simplification Using Quadric Error Metrics</a> and the standford lecture notes <a href="https://graphics.stanford.edu/courses/cs468-10-fall/LectureSlides/08_Simplification.pdf">here</a>.
+            I initially learned about this algorithm while reading the nanite notes and reading through the paper above.
+            Let's learn this technique as well then !
+        </text>
+        <h3>Tangent one: Simplifying Meshs</h3>
+        The Quadric mesh simplification is a technique to reduce the number of vertices, edges and faces of a mesh while keeping the most accurate representation of said mesh.
+        It is well illustrated with a simple drawing:
+        <br>
+        <img src="images/error_quadric.png" alt="error quadric">
+        <br>
+        We'll derive an error on each vertex depending on the planes the vertex is part of.
+        This will enable us to derive a new updated position for the vertex once we simplify around it, keeping a more accurate form.
+        We'll then remove vertices by collapsing them by pairs using the quadric error as a threshold.
+        The github implementation I used allows for a target vertices count to be specified, which will be useful later.
+        <h2>Tangent 2: Clustering</h2>
+        TODO
+        <h3>References</h3>
+        <ol>
+            <li>Nanite youtube demo: https://youtu.be/qC5KtatMcUw?si=qyiJhpOMmDkylBNa</li>
+            <li>Nanite deep dive at SIGGRAPH 2021: https://www.youtube.com/watch?v=eviSykqSUUw&ab_channel=SIGGRAPHAdvancesinReal-TimeRendering</li>
+            <li>Nanite slides and comments: https://advances.realtimerendering.com/s2021/Karis_Nanite_SIGGRAPH_Advances_2021_final.pdf</li>
+            <li>Quadric Simplification C library: https://github.com/sp4cerat/Fast-Quadric-Mesh-Simplification</li>
+            <li>Quadric Simplification paper: https://www.cs.cmu.edu/~./garland/Papers/quadrics.pdf</li>
+            <li>Quadric Simplification notes: https://graphics.stanford.edu/courses/cs468-10-fall/LectureSlides/08_Simplification.pdf</li>
+        </ol>
+    </main>
+  </body>
+
+</html>
