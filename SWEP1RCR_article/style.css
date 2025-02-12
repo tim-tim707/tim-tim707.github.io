@@ -1,10 +1,14 @@
 /* Inter font */
 :root {
   font-family: Inter, sans-serif;
-  font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
+  font-feature-settings: 'liga' 1, 'calt' 1;
+  /* fix for Chrome */
 }
+
 @supports (font-variation-settings: normal) {
-  :root { font-family: InterVariable, sans-serif; }
+  :root {
+    font-family: InterVariable, sans-serif;
+  }
 
   @supports (font-style: italic) {
     .italic-text {
@@ -15,4 +19,33 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+img,
+video {
+  display: block;
+  margin: 20px auto;
+  width: 70%;
+  height: auto;
+  border-radius: 8px;
+}
+
+@media (max-width: 800px) {
+
+  img,
+  video {
+    width: 100%;
+  }
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.grid-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
 }

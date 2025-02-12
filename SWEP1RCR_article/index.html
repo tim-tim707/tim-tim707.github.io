@@ -20,7 +20,7 @@
 
 <body>
        <main>
-              <div style="width: 80%; margin: 0 auto; text-align: left; font-size: 24px; line-height: 1.3;">
+              <div style="width: 80%; margin: 0 auto; text-align: justify; font-size: 24px; line-height: 1.3;">
                      <h1>How we are making a remaster of Star Wars Episode I Racer</h1>
                      <p>
                             Star Wars Episode I Racer (SWE1R or SWR) is a 1999 racing video game. Designed to be as
@@ -36,8 +36,7 @@
                             resolution and the pixelated font can look blurred, and the windowing system is
                             forced in fullscreen mode which can be annoying.
                      </p>
-                     <img src="original_game.png" alt="original game screenshot"
-                            style="display: block; margin: 20px auto; max-width: 80%; height: auto; border-radius: 8px;">
+                     <img src="original_game.jpg" alt="original game screenshot">
                      <div>
                             <p style="text-align: center; font-size: 22px;">
                                    <i>Screenshot of the original game running in forced fullscreen 640 by 480 pixels</i>
@@ -54,37 +53,55 @@
                             This article is about the history and the progress of this project, as well as the people
                             that made it possible. If you are only interested about the results and want to see it with
                             your own eyes, skip ahead to
-                            <a href="#section_release">this section </a>
+                            <a href="#section_release">this section</a>. Otherwise, follow along the modding efforts of
+                            the community !
                      </p>
                      <p>
-                            We first need a bit of understanding of how the game read and display assets such as 3D
-                            models and icons. When running the game, it will load 4 binary blocks for models, sprites,
-                            textures and splines (tracks). Each asset is identified with an identifier. If we can
-                            change these identifiers or modify how they are used, we can already do some fun stuff.
+                            In order for you to understand the steps of this journey, we first need a bit of
+                            explaining of how the game read and display assets such as 3D models and icons. When running
+                            the game, it will load 4 binary blocks for models, sprites, textures and splines (tracks).
+                            Each asset is identified with an identifier. If we can change these identifiers or modify
+                            how they are used, we can already do some fun stuff.
                      </p>
+                     <img src="quadbulba.webp" alt="model swap">
+                     <div>
+                            <p style="text-align: center; font-size: 22px;">
+                                   <i>Swapping Ben Quadinaros and Sebulba</i>
+                            </p>
+                     </div>
                      <p>
-                            // examples of model swapping
-                     </p>
-                     <p>
-                            If we can understand the binary blocks, we can even modify them to put the data we want.
+                            Most of the early results would be about finding model ids and swapping them. If we can
+                            understand the binary blocks, we can do better. By modifying them to put the data we want,
+                            we can have some custom models already.
                             Special thanks to Aphex and LightningPirate for their work on this. They are the ones who
                             understand the most about these files and their unique format. This is a good start
                             but we hit some limits when trying to do more ambitious things. Indeed, the game contains a
-                            lot of limits for the number of triangles per 3D model, or for the maximum size of textures.
+                            lot of fixed limits for the number of triangles per 3D model, or for the maximum size of
+                            textures.
                      </p>
-                     <p>
-                            // Examples of modifying modelblock
-                     </p>
+                     <video width="600" muted controls>
+                            <source src="leadphalanx_asset_block_insertion.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                     </video>
+                     <div>
+                            <p style="text-align: center; font-size: 22px;">
+                                   <i>An HD part by LeadPhalanx, inserted in the modelBlock by Aphex's tool</i>
+                            </p>
+                     </div>
                      <p>
                             In order to break these limits, we'll have to replace how the game display assets with our
                             own code. This is much simpler said than done, because we need to understand the inner
                             workings of the game very precisely, or it won't work at all.<br>
-                            After much decompilation and reverse engineering of the game, we can finally use our own
-                            windowing system and renderer, which already unlocks a resizeable window and a 1080p
-                            resolution !
+                            When I joined the project, some decompilation was already done here and there. By merging
+                            bits and pieces from everyone, as well as finding similar code in other LucasArt games of
+                            the era (Jedi Knight Dark Forces II and Indiana Jones and the infernal machine), our
+                            understanding grew steadily. I was helped in this process by Galeforce that was doing
+                            similar work than me for speedrunning tools, and Tilman who was also interested by the
+                            graphics part. After much effort in decompilation and reverse engineering of the game, we
+                            could finally use our own windowing system and renderer, which already unlocks a resizeable
+                            window and a 1080p resolution !
                      </p>
-                     <img src="SWR_1080_fonts.png" alt="OpenGL renderer in action"
-                            style="display: block; margin: 20px auto; max-width: 80%; height: auto; border-radius: 8px;">
+                     <img src="SWR_1080_fonts.jpg" alt="OpenGL renderer in action">
                      <div>
                             <p style="text-align: center; font-size: 22px;">
                                    <i>Screenshot of the game running in windowed mode 1080p with HD fonts, with a custom
@@ -92,99 +109,177 @@
                             </p>
                      </div>
                      <p>
-                            How are we going to do HD graphics now ? Increasing the resolution is only the beginning. We
-                            are going to replace the function responsible for drawing the objects, get the model Ids for
-                            each part and filter the ones we will render with our own code. Like that, the replacement
-                            is invisible from the point of view of the game, and we can swap an original game asset with
-                            a 3D model of our own. This would bypass the hard-coded limits of the original game for
-                            triangles and textures completely, and allow us full control of how to render our own
-                            replacement models. When the game tries to render model X, we check if we have a replacement
-                            for it, and if that is the case we render it instead. Simple and efficient !
+                            How are we going to do HD graphics now ? Increasing the resolution is only the beginning.
+                            Now that we have understood the rendering of the game, we can start modifying it to add new
+                            features. We are going to replace the function responsible for drawing the objects, get the
+                            model Ids for each part and filter the ones we will render with our own code. Like that, the
+                            replacement is invisible from the point of view of the game, and we can swap any original
+                            game asset with a 3D model of our own. This will bypass the hard-coded limits of the
+                            original game for triangles and textures completely, and allow us full control of how to
+                            render our own replacement models. When the game tries to render model X, we check if we
+                            have a replacement for it, and if that is the case we render it instead. Simple and
+                            efficient !
                      </p>
-                     <p>
-                            // Example of rendering only Ids
-                            // Example of model replacement with modern one.
-                     </p>
+                     <img src="rendering_MODELIDS.jpg" alt="model id render">
+                     <div>
+                            <p style="text-align: center; font-size: 22px;">
+                                   <i>Each unique color is a model ID we can replace</i>
+                            </p>
+                     </div>
+                     <img src="custom_pod_inspect.jpg" alt="model id replacement">
+                     <div>
+                            <p style="text-align: center; font-size: 22px;">
+                                   <i>Replaced Anakin's pod with our own gltf model</i>
+                            </p>
+                     </div>
                      <p>
                             Since we control the rendering of these new models, we can even add more modern graphics
                             techniques such as having the environment cast light to the model (IBL for those who are
                             interested) or normal mapping. There are a lot of new possibilities ahead !
                      </p>
-                     <p>
-                            // Example of a metallic sphere with normal map and IBL
-                     </p>
                      <section id="section_release">
                             <h2>Download and use the 3D model replacement mod, with HD fonts.</h2>
                      </section>
                      <p>
-                            Link to the release + explainations
+                            Here is a <a href="https://github.com/tim-tim707/SW_RACER_RE/releases">download link </a> to
+                            the mod. Download the zip file and unzip it in the same directory as your game. You
+                            should now have a new dinput.dll and assets/ directory.
+                            <br><br>
+                            Add the gltf or glb files you want to replace in the assets/gltf directory by reading the
+                            text file contained in it. Pods need to have three nodes whose name starts with "cockpit",
+                            "engineR" and "engineL". Don't hesitate to share your work in the <a
+                                   href="https://discord.com/servers/star-wars-episode-i-racer-441839750555369474">official
+                                   discord server</a> if
+                            you want to make custom pods as well !
+                            <br><br>
+                            Alternatively, download the lego pod replacement pack from <a
+                                   href="lego_pod_replacement_pack.zip">here</a> or from discord, and unzip it into the
+                            assets/gltf directory. Note that this release only works for the GOG Version of the game.
                      </p>
                      <p>
-                            The use of this mod is as simple as possible so that anyone can use it. Artists simply put
-                            gltf files named properly in the correct folder, and the mod (dinput.dll file), will
+                            The use of this mod is as made simple as possible so that anyone can use it. Artists drop
+                            their gltf files named properly in the correct folder, and the mod (dinput.dll file), will
                             detect the files and replace the corresponding in-game model.
                      </p>
+                     <video width="600" muted controls>
+                            <source src="lego_pod_models.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                     </video>
+                     <div>
+                            <p style="text-align: center; font-size: 22px;">
+                                   <i>A showcase of the lego pod replacement pack in action, from DigitalUnity</i>
+                            </p>
+                     </div>
+                     <img src="wip_hd_bullseye.jpg" alt="false_perspective">
+                     <div>
+                            <p style="text-align: center; font-size: 22px;">
+                                   <i>Work in progress for high definition Bullseye Navior's pod, from LeadPhalanx</i>
+                            </p>
+                     </div>
+                     <h2>
+                            Bonus stuff !
+                     </h2>
                      <p>
-                            // TODO: embed this in the article
                             Here is a list of some interesting work done by the modding community throughout the years,
-                            both technical and artistic:
-                            LeadPhalanx work in the official discord:
-                            Pods:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/750149683732676618)
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1170504148228243527)
-                            Parts:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/974892708621586462)
-                            Cantina:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1242926780533444760)
-                            Gonzalo alternate backgrounds for menus:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1115394508968955945)
-                            Aphex proof of concept for model block repacking:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1177234855227035768)
-                            LP proof of concept for the blender plugin:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1228847411175231558)
-                            LP figuring out animations:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/931127492369063966)
-                            Myself fixing rendering of sprites:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1271203082763767859)
-                            having dynamic IBL working
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1314366731120148561)
-                            Showcasing model replacement from blender to the game:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1315093398776053873)
-                            Pods are weirder
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1320503770802688082)
-                            Lego model from DigitalUnity in game:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1333055639240441929)
-                            All pods as lego:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1337573278419779725)
-                            Galeforce showcasing state saving and rollback:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1206092227407904839)
-                            + freecam on top of it:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1214470330010042368)
-                            Tool to select parts:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1217498222315175937)
-                            Cainwood showcasing a memory reader / writer running with the game:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1213362825163055164)
-                            Tilman first renderer replacement:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1217587974850613428)
-                            + new capabilities collision rendering and more
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1235310537072574585)
-                            + trigger rendering
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1237477431854497843)
-                            Ben showcasing custom menu for new tracks:
-                            (https://discord.com/channels/441839750555369474/441842584592056320/1217808109754646618)
+                            both technical and artistic. I put them here as a showcase of what the modding community has
+                            been doing over the years. Some features are available in <a
+                                   href="https://github.com/everalert/annodue">annodue</a>, developped by Galeforce, and
+                            others you'll have to get yourself from the #modding channel of the <a
+                                   href="https://discord.com/servers/star-wars-episode-i-racer-441839750555369474">official
+                                   discord server</a>
+                     </p>
+                     <img src="holotable.jpg" alt="false_perspective">
+                     <div>
+                            <p style="text-align: center; font-size: 22px;">
+                                   <i>Did you know this perspective trick for rendering the holotable ?</i>
+                            </p>
+                     </div>
+                     <!-- TODO: grid -->
+                     <div class="grid-container">
+                            <div class="grid-item">
+                                   <img src="hd_plug8.webp" alt="HD_parts">
+                            </div>
+                            <div class="grid-item">
+                                   <img src="HD_control_linkage.webp" alt="HD_parts">
+                            </div>
+                            <div class="grid-item">
+                                   <img src="HD_injector.webp" alt="HD_parts">
+                            </div>
+                     </div>
+                     <div>
+                            <p style="text-align: center; font-size: 22px;">
+                                   <i>LeadPhalanx work for HD parts</i>
+                            </p>
+                     </div>
+                     <div class="grid-container">
+                            <div class="grid-item">
+                                   <img src="gonzalo_alternate_1.webp"
+                                          alt="Alternate backgrounds for the splash screen">
+                            </div>
+                            <div class="grid-item">
+                                   <img src="gonzalo_alternate_2.webp"
+                                          alt="Alternate backgrounds for the splash screen">
+                            </div>
+                            <div class="grid-item">
+                                   <img src="gonzalo_alternate_3.webp"
+                                          alt="Alternate backgrounds for the splash screen">
+                            </div>
+                     </div>
+                     <div>
+                            <p style="text-align: center; font-size: 22px;">
+                                   <i>Gonzalo's alternative backgrounds</i>
+                            </p>
+                     </div>
+
+                     <video width="600" muted controls>
+                            <source src="tilman_trigger_renderer.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                     </video>
+                     <div>
+                            <p style="text-align: center; font-size: 22px;">
+                                   <i>Tilman's renderer with collision and trigger rendering</i>
+                            </p>
+                     </div>
+                     <video width="600" muted controls>
+                            <source src="working_ibl.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                     </video>
+                     <div>
+                            <p style="text-align: center; font-size: 22px;">
+                                   <i>Dynamic IBL rendering done by yours truly</i>
+                            </p>
+                     </div>
+                     <video width="600" muted controls>
+                            <source src="swe1r_cam7.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                     </video>
+                     <div>
+                            <p style="text-align: center; font-size: 22px;">
+                                   <i>Annodue state saving / rollback and free cam by Galeforce</i>
+                            </p>
+                     </div>
+                     <video width="600" muted controls>
+                            <source src="swe1r_new_quick_race_menu.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                     </video>
+                     <div>
+                            <p style="text-align: center; font-size: 22px;">
+                                   <i>Annodue quick track and pod selection menu by Galeforce</i>
+                            </p>
+                     </div>
+                     <p>
+                            Of course, there are still some small issues here and there that I'll need to fix (as well
+                            as making a Steam Version that doesn't crash on load), but I believe the project is in a
+                            good enough state to be used by anyone to have custom pods and parts in Star Wars Racer.
                      </p>
                      <p>
-                            Of course, there is always bugs that I'll need to fix (and that already got fixed in new
-                            release revisions), but I believe the project is in a good enough state to be used by anyone
-                            to have custom pods and parts in Star Wars Racer.
-                     </p>
-                     <p>
-                            If you are interested about this project, also check annodue // link to annodue, another mod
-                            for speedrunners that add new capabilities and menus.
+                            If you are interested about this project, also check <a
+                                   href="https://github.com/everalert/annodue">annodue</a>, another mod for speedrunners
+                            that add new capabilities and menus.
                      </p>
                      <p>
                             If you want to read about my personal experience doing this project, you can go to <a
-                                   href="personal_journey.html">this article</a>
+                                   href="personal_journey.html">this article</a>.
                      </p>
               </div>
        </main>
