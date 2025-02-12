@@ -20,8 +20,8 @@
 
 <body>
     <main>
-        <div style="width: 80%; margin: 0 auto; text-align: left; font-size: 24px; line-height: 1.3;">
-            <h1>My journey through the decompilation and remaster of Star Wars Episode I Racer</h1>
+        <div style="width: 80%; margin: 0 auto; text-align: left; line-height: 1.3;">
+            <h1>My journey through the decompilation and remaster of Star Wars Episode I Racer - 12 Feb 2025</h1>
             <p>
                 If you are interested about the project, you can go to <a href="index.html">this
                     page</a> instead.
@@ -30,15 +30,16 @@
                 When I was younger, I use to play the old Star Wars games such as Rogue Squadron and Star
                 Wars Racer. I've always enjoyed these games, and at some point I decided I wanted to
                 remaster Star Wars Racer (SWE1R or SWR), because the game was great but the graphics were
-                getting
-                dated. At that time, it was just a childhood dream that I kept in the back of my head. I
-                just thought it would be cool to do it but never started it.
+                getting dated. At that time, it was just a childhood dream that I kept in the back of my head. I just
+                thought it would be cool to do it but never started it.
                 <br>
                 I joined the community in 2019, after playing the full campaign again. This is when I
-                discovered multiplayer and community tournaments being held regularly.
+                discovered multiplayer and community tournaments being held regularly. I've met some great people, and
+                this reinforced my idea to do a remaster for the game one day.
             </p>
             <p>
-                Fast forward a couple of years and I'm a software engineer student.
+                Fast forward a couple of years and I'm a software engineer student. I'm learning a lot of low level,
+                mostly C, but also specialize in 3D graphics, which I particularly enjoy.
                 <br>
                 During one of my year, I met a younger student that was into reverse engineering and low
                 level
@@ -50,6 +51,7 @@
                 so I started the decompilation repository for the game the 28 January 2023, just over two
                 years from now.<br>
                 My overall plan was:<br>
+            </p>
             <ul>
                 <li>
                     Understand the game well enough to replace the original renderer by our own
@@ -57,38 +59,29 @@
                 <li>
                     Make pretty modern graphics with <a
                         href="https://en.wikipedia.org/wiki/Physically_based_rendering">Physically
-                        based rendering</a> and Image based lighting
+                        based rendering</a>
+                    and Image based lighting (I've learned about it and it was a perfect match
+                    for this project).
                 </li>
                 <li>
-                    Replace the models with better quality assets and textures
+                    Replace the models with better quality assets and textures. I only have very basic knowledge of
+                    Blender but there are some better artists in the community whom I could help, by making an interface
+                    to the game rendering somehow.
                 </li>
             </ul>
-            I had already learn the basics of graphics
-            programming such as OpenGL and shader programming, as well as the rendering cited before
-            techniques, and it's a programming field I really enjoyed. I had, however, no competency in
-            Reverse Engineering and decompilation, and only a very basic understanding of assembly.
-            Well, if my friend learned it, what stops me from learning it too ?
+            <p>
+                I had the technical abilities to do it, and knew how to do OpenGL and shaders. I had, however, no
+                competency
+                in Reverse Engineering and decompilation, and only a very basic understanding of assembly.
+                Well, if my friend learned it, what stops me from learning it too ?
             </p>
             <p>
-                Thats at that time that I decided more clearly on what the decompilation project should
-                be, after talking to friends. On the Legal aspect, I see that reverse engineering is a grey
-                area as long as no harm is done. I decided to not decompile the whole game and not try
-                for matching decompilation since this could be enabling piracy. On the other hand, the
-                modding scene for Star Wars BattleFront 2 (2005 edition on PC and PS2) was really big and
-                flourishing, and they were providing great value for players. That's what I wanted to do for
-                Star Wars Racer, even though the community is much smaller.
-            </p>
-            <p>
-                The following months would be a mix of merging knowledge we have found here and there about
-                the game, and slow decompilation, scraping every bit we can so that we can make sense of
-                what is going on where. On ghidra, that would be either trying to find a small function that
-                is sufficiently independent to understand it on its own, or find references between global
-                data and functions to infer its use and meaning. Sometimes, understanding how a global
-                variable interacted with the code could unlock larger comprehension of the game, and
-                sometimes I would just understand one or two random function each evening for days.
-                <br>
-                Some systems would always be referenced such as the game object
-                management system, while others much less (Sound and graphics).
+                I decided more clearly what the decompilation project should be, after talking to friends. On the Legal
+                aspect, I see that reverse engineering is a grey area as long as no harm is done. I decided to not
+                decompile the whole game and not try for matching decompilation since this could be enabling piracy. On
+                the other hand, the modding scene for Star Wars BattleFront 2 (2005 edition) was really dynamic and
+                flourishing, and they were providing great value for players. That's what I wanted to do for Star Wars
+                Racer, even though the community is much smaller.
             </p>
             <h2>Decompilation and technical part</h2>
             <h3>Starting the project</h3>
@@ -147,10 +140,11 @@ The ewok says 'Hey bartender, get me a--' but stops, amazed,
 when the jawa grabs his cloak and starts pointing at the&lt;truncated here&gt;
 </code></pre>
             <div>
-                <p style="text-align: center; font-size: 22px;">
+                <p class="caption" style="text-align: center;">
                     <i>Some strings found in the game executable</i>
                 </p>
             </div>
+            <h3>Getting help from similar projects</h3>
             <p>
                 Appart from In-Game strings easily recognizable, some debug path that
                 should not have been there spiked my curiosity. Google would point to
@@ -170,56 +164,175 @@ when the jawa grabs his cloak and starts pointing at the&lt;truncated here&gt;
                 The math library are almost identical for the 3 games, which can be explained
                 by LucasArt developping so much games that engine reuse would be common
                 practice, like in many studios at the time.
-                <br>
+            </p>
+            <p>
+                Let's take a look at some common functions in both engines.
+            </p>
+            <pre><code class="language-C", style="font-size: 18px">// Example of output by Ghidra after having defined some types
+void __cdecl rdMatrix_BuildRotate34(rdMatrix34 *out,rdVector3 *rot)
+{
+  rdVector3 *prVar1;
+  float local_1c;
+  float local_18;
+  float local_14;
+  float local_10;
+  float local_c [3];
+
+  prVar1 = rot;
+  stdMath_SinCosFast(rot->x,(float *)&rot,&local_1c);
+  stdMath_SinCosFast(prVar1->y,&local_14,&local_10);
+  stdMath_SinCosFast(prVar1->z,&local_18,local_c);
+  (out->rvec).x = -(local_18 * local_14) * (float)rot + local_c[0] * local_10;
+  (out->rvec).y = local_18 * local_10 * (float)rot + local_c[0] * local_14;
+  (out->rvec).z = -local_18 * local_1c;
+  (out->lvec).x = -local_14 * local_1c;
+  (out->lvec).y = local_10 * local_1c;
+  (out->lvec).z = (float)rot;
+  (out->uvec).x = local_c[0] * local_14 * (float)rot + local_18 * local_10;
+  (out->uvec).y = -(float)rot * local_c[0] * local_10 + local_18 * local_14;
+  (out->uvec).z = local_c[0] * local_1c;
+  (out->scale).x = 0.0;
+  (out->scale).y = 0.0;
+  (out->scale).z = 0.0;
+  return;
+}
+</code></pre>
+            <p>
+                Here is an example of a mostly pure function (No global variables, almost no calls to sub functions).
+                Its pretty easy to understand what is going on after having defined the matrix type and looked at how
+                the data flows. In most cases though, the function references unknown global variables and call unknown
+                functions, and we have to go down the function calls in hope of finding more understandable structures.
+            </p>
+            <pre><code class="language-C", style="font-size: 18px">// Example of the system API to be more portable
+typedef struct HostServices
+{
+    uint32_t some_float;
+    int (*messagePrint)(const char *, ...); // 0x4
+    int (*statusPrint)(const char *, ...); // 0x8
+    int (*warningPrint)(const char *, ...); // 0xc
+    int (*errorPrint)(const char *, ...); // 0x10
+    int (*debugPrint)(const char *, ...); // 0x14
+    void (*assert)(const char *, const char *, int); // 0x18
+    uint32_t unk; // 1c
+    void *(*alloc)(unsigned int); // 0x20
+    void (*free)(void *); // 0x24
+    void *(*realloc)(void *, unsigned int); // 0x28
+    uint32_t (*getTimerTick)(); // 0x2c
+    stdFile_t (*fileOpen)(const char *, const char *); // 0x30
+    int (*fileClose)(stdFile_t); // 0x34
+    size_t (*fileRead)(stdFile_t, void *, size_t); // 0x38
+    char *(*fileGets)(stdFile_t, char *, size_t); // 0x3c
+    size_t (*fileWrite)(stdFile_t, void *, size_t); // 0x40
+    int (*feof)(stdFile_t); // 0x44
+    int (*ftell)(stdFile_t); // 0x48
+    int (*fseek)(stdFile_t, int, int); // 0x4c
+    int (*fileSize)(stdFile_t); // 0x50
+    int (*filePrintf)(stdFile_t, const char *, ...); // 0x54
+    wchar_t *(*fileGetws)(stdFile_t, wchar_t *, size_t); // 0x58
+    void *(*allocHandle)(size_t); // 0x5c
+    void (*freeHandle)(void *); // 0x60
+    void *(*reallocHandle)(void *, size_t); // 0x64
+    uint32_t (*lockHandle)(uint32_t); // 0x68
+    void (*unlockHandle)(uint32_t); // 0x6c
+} HostServices;
+</code></pre>
+            <p>
+                Here is another interesting example. In order to be as portable as possible, most calls from the game go
+                through this "API". In order to support new platforms, developpers simply modify the callbacks in the
+                initializer function for this structure. Since assets files are in a custom format as binary blobs, they
+                can be embedded in a cartridge for N64 or stay as files to be read for windows and mac, and the familly
+                of file reading function can be swapped without issues. The debug prints in the release
+            </p>
+            <p>
                 With the merging going at a good pace, some pure functions would
                 already be decompiled, which help understand more complex functions, and so
                 on. This provide a compounding effect that makes decompilation faster and faster (As well as
-                my skills improving in understanding assembly and decompilation)
+                my skills improving in understanding assembly and decompilation).
             </p>
-            <pre><code class="language-C", style="font-size: 18px">
-// TODO: vector and matrix pure functions
-TODO: portability of system functions
+            <h3>Learning the old windows api the hacker's way</h3>
+            <p>
+                The next easier step for me to understand the game would be to find documentation about some of the
+                game's api. Mainly Direct3D, DirectInput and Aureal3D, for graphics and sound. I've noticed a lot of
+                unknown pointers that would get dereferenced with offset and called afterward.
+            </p>
+            <pre><code class="language-C", style="font-size: 18px">// Some weird looking variables
+iVar2 = (**(code **)(*local_5c0 + 0x2c))();
+// Some binary blob being passed to one of the function
+binaryBlobData = 82 e6 44 59 2e c9 cf 11 bf c7 44 45 53 54 00 00 // in reality, just an address to those bytes
+iVar2 = (**(code **)*puVar6)(puVar6,&binaryBlobData);
 </code></pre>
             <p>
-                The game uses a single id for each asset (model, sprite, texture), that is used to fetch the
-                corresponding data by reading the asset blocks. The enum for the ids also leaked in the
-                release of the Nintendo Switch version, with the source files available next to the data
-                blocks. That's some good luck ! We were already in the process of finding which Id
-                correspond to which model, so this was a nice time saver.
-                <br>
-                The textures have different format with or without palette and transparency. The models have
-                hierarchy informations and different node types (with or without children or transform).
-                Some data that we couldn't make sense of at first, was later discovered to be N64 display
-                list for GSP in the F3DEX_GBI_2 format, a microcode used to control the rendering. If you
-                are interested, here is a link to the <a
-                    href="https://ultra64.ca/files/documentation/online-manuals/man/pro-man/pro04/index4.5.html">N64
-                    programming Manual section</a> and the <a
-                    href="https://ultra64.ca/files/documentation/online-manuals/man/n64man/gsp/gsp.html">N64
-                    GSP Function reference</a>.
-
-                This quickly made us discover some hardcoded limits of the game that would be very hard
-                to fix.
-                <br>
-                For example, there is a fixed number of triangles the game can show at once, and a limited
-                number and total byte size for textures. To circumvent these limits, having a separate
-                renderer is much easier and powerful than trying to patch every part of the game that
-                reference them.
-
+                This looks like a virtual table for something, but I don't know why, nor what are the functions.
+                DirectDraw is helping here since the initialization function has been dynamically linked. By working
+                from there I think I get a better chance at cracking this mystery. Ghidra can give me this information:
+            </p>
+            <img src="ghidra_external_ddraw.png" alt="original game screenshot">
+            <div>
+                <p class="caption" style="text-align: center;">
+                    <i>Ghidra informations about an external function</i>
+                </p>
+            </div>
+            <p>
+                By reading the <a
+                    href="https://learn.microsoft.com/en-us/windows/win32/api/ddraw/nf-ddraw-directdrawcreate">Microsoft
+                    Documentation</a> about this function, we can get the arguments type. I couldn't get the exact
+                structure definitions on the Microsoft documentation though, so I had to find it elsewhere.
+                Looking on the internet for these definitions, I found the ddraw.h header in the <a
+                    href="https://github.com/apitrace/dxsdk/blob/master/Include/ddraw.h">apitrace github repository</a>.
+                I could then adapt the header for the version the game uses (DirectDraw4). The process is similar for
+                the other dlls. For example, I found the dinput definitions on the wine repository.
             </p>
             <p>
-                Another good approach to understand the inner working of the game would be the IO with
-                config files and assets. Some config files for mappings, sounds, visual quality are parsed
-                by the game into global variables that can be understood and help understand other functions
-                where they are used. All the assets of the game are parsed from 4 binary blobs named
-                modelblock, splineblock, spriteblock and textureblock. The understanding of these files
-                would be essential in understanding the custom format of the 3D models defined in it. This
-                could unlock potential manipulation of in-game assets via
-                decompression-modification-recompression in a tool like blender, as long as the format
-                matches what the game expect. These file and their format would remain a mystery for a lot
-                of time, since their structure were not like the other games.
+                By merging these definitions with the decompilation database, this made me learn about GUID,
+                QueryInterface(), CoCreateInstance() and the IUnknown interface model. I've always coded C on Linux so
+                this was a very convoluted way to learn how windows worked back in the days.
+            </p>
+            <h3>The end of low hanging fruits</h3>
+            <p>
+                Things were going well. The base libraries and the main interfaces have been found and matched with
+                other projects, and I've become more comfortable reading Ghidra pseudo-C, and navigating between
+                cross-references, data and functions. One of the last easy win would be to find the parsing functions
+                for the config files the games reads and writes.
             </p>
             <p>
-                In November 2023, Aphex shared custom code he had to parse the structure of the
+                The decompilation of the IO of config files and assets would slightly help understand the inner working
+                of the game, but not much more. Some config files for mappings, sounds, visual quality are parsed by the
+                game into global variables that can be cross referenced with functions using them. The assets parsing
+                however
+                would prove much more difficult to understand than the config files. All the assets of the game are
+                parsed from 4 binary blobs named modelblock, splineblock, spriteblock and textureblock. The
+                understanding of these files data, both from external static analysis and analysis from looking at the
+                parsing code would be essential in unlocking the custom format of the 3D models defined in it. This
+                could enable manipulation of in-game assets via decompression-modification-recompression in a tool like
+                blender, as long as the format matches what the game expect. These file and their format would remain a
+                mystery for a lot of time, since their structure were not like the other games.
+            </p>
+            <p>
+                The following months would be slow decompilation, scraping every bit we can so that we can make sense of
+                what is going on where. On ghidra, that would be either trying to find a small function that
+                is sufficiently independent to understand on its own, or find references between global
+                data and functions to infer its use and meaning. Sometimes, understanding how a global
+                variable interacted with the code could unlock larger comprehension of the game, and
+                sometimes I would just understand one or two random function each evening for days.
+                Some systems would always be referenced such as the game object management system, while others much
+                less, which would push our knowledge boundary into the game's internal logic. This effort was starting
+                to be useful for future modding endeavours. On the other hand, the decompilation got more tedious, and
+                very time consuming. I would keep decompiling regularly with the determination that this would enable
+                something bigger to be built on top of it, but the time horizon became much more incertain. My 4-6 naive
+                estimate has already been reached, and I had no idea how much efforts it would take for a breakthrough.
+            </p>
+            <h3>A new hope</h3>
+            <p>
+                Some work put in evidence that the game uses a single id for each asset (model, sprite, texture), that
+                is used to fetch the
+                corresponding data by reading the asset blocks. We were slowly matching ids to their corresponding
+                model, but luckily the enum got leaked in the release of the Nintendo Switch version, with the source
+                files available next to the data
+                blocks. This was a nice time saver.
+            </p>
+            <p>
+                In November 2023, eleven months after I started this project, Aphex shared custom code he had to parse
+                the structure of the
                 binary blocks. This gold mine of knowledge helped us tremendously in
                 understanding both the static data of the binary blobs of the game, as
                 well as the parsing logic inside the game. He was working on it for a long time and cross
@@ -229,24 +342,67 @@ TODO: portability of system functions
                 which was an important milestone for this project.
                 (https://discord.com/channels/441839750555369474/441842584592056320/1177552168392347648)
             </p>
+            <video width="600" muted controls>
+                <source src="leadphalanx_asset_block_insertion.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div>
+                <p class="caption" style="text-align: center;">
+                    <i>An HD part by LeadPhalanx, inserted in the modelBlock by Aphex's tool</i>
+                </p>
+            </div>
             <p>
-                With math function, camera functions, 3D functions, system functions,
-                our understanding grew enough that one year later, another community
-                member named tilman managed to hook and replace enough functions to run
-                imgui and a d3d api replacement, proving that we had enough
-                decompilation already to start replacing graphics.
-                With this proof of concept working, most of my time from this point onward went into
-                improving the renderer replacement. After a bit more than one year of slow and monotonous
-                decompilation, the fun part of building the gltf renderer was upon me !
-                I wanted support for renderDoc since its a powerful tool that would greatly help.
-                Unfortunately, the replacement was done with immediate rendering to be as close as possible
-                to the original one.
-                Tilman and I started to swap the d3d rendering for openGL rendering immediate mode at first,
-                then replaced the immediate mode openGL with the more modern api, and we had renderDoc
-                support just like that !
+                The textures have different format with or without palette and transparency. The models have
+                hierarchy informations and different node types (with or without children or transform).
+                Some data that we couldn't make sense of at first, was discovered to be N64 display
+                list for GSP in the F3DEX_GBI_2 format, a microcode used to control the rendering. If you
+                are interested, here is a link to the <a
+                    href="https://ultra64.ca/files/documentation/online-manuals/man/pro-man/pro04/index4.5.html">N64
+                    programming Manual section</a> and the <a
+                    href="https://ultra64.ca/files/documentation/online-manuals/man/n64man/gsp/gsp.html">N64
+                    GSP Function reference</a>.
+
+                This made us discover some hardcoded limits of the game that would be very hard to fix.
+                <br>
+                For example, there is a fixed number of triangles the game can show at once, and a limited
+                number and total byte size for textures. To circumvent these limits, having a separate
+                renderer is much easier and powerful than trying to patch every part of the game that
+                reference them.
+            </p>
+            <h3>This is were the fun begins</h3>
+            <p>
+                Our decompilation progress marching forward one function at a time, we were starting to discuss how much
+                more we needed to decompile, in order to start doing the things I wanted to do in the first place. Do we
+                really need to decompile the code of the menus and button callbacks or the physical simulation part ?
             </p>
             <p>
-                The following months would be implementing the
+                With math function, camera functions, 3D functions, system functions, our understanding was good enough
+                that the 13th mars 2024, another community member named tilman managed to hook and replace enough
+                functions to run imgui and an opengl api replacement, proving that we had enough decompilation already
+                to start replacing graphics. With this proof of concept working, most of my time from this point onward
+                went into improving the renderer replacement. After a bit more than one year of slow and monotonous
+                decompilation, the fun part of building the gltf renderer was upon me ! I wanted support for renderDoc
+                since its a powerful tool that would greatly help. Unfortunately, the replacement was done with
+                immediate rendering to be as close as possible to the original one. Tilman and I started to swap the
+                rendering for immediate openGL to the more modern api, and we had renderDoc support just like that !
+            </p>
+            <p>
+                The following months would be spent finding ways to hook functions and load the renderer in a simple and
+                efficient manner. I tried patching the game statically but didn't really like the solution. It was messy
+                and inconvenient to use. I tried dynamic patching, which was already a bit better. One would run the
+                patcher, which would run the game and stop it, modify the main function, load the mod dll which would
+                hook all interesting functions, then resume the execution of the main thread. What I liked was that the
+                loader could do more, like provide a UI, some control when loading multiple mods, and more. Galeforce,
+                who was working on decompilation as well, was developping another mod loader in parallel (<a
+                    href="https://github.com/everalert/annodue">annodue</a>), to add speedrunning features. I didn't
+                really want to compete with him, and realized that my loader would need much more work to be on par with
+                his. I finally settled for a simple dll injection that would hook the functions into the original game.
+                The final user would just have to unzip an archive an run the original game to enjoy mods. This was the
+                simplest solution for me and the final user, and compiling to a dll would help when I would finally
+                integrate my mod to annodue.
+            </p>
+            <p>
+                The final step of this project would be implementing the
                 <a href="https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html">gltf specification</a>
                 with the help of the
                 <a href="https://github.com/KhronosGroup/glTF-Sample-Renderer">gltf sample renderer</a> and
@@ -254,9 +410,13 @@ TODO: portability of system functions
                 <a href="https://github.com/KhronosGroup/glTF-Sample-Models">gltf sample models</a>,
                 which are very high quality source of information.
                 I had to be careful about some models since pods are animated from the game's data (When
-                turning,
-                when breaking an engine, going up and down slopes).
+                turning, when breaking an engine, going up and down slopes). GLTF files can be exported by Blender, have
+                a parser already available (tinygltf.h), have PBR capabilites, and is a very simple format to render,
+                which checks more boxes than I had. I set a test scene to be rendered inside the game, and added support
+                for features until I had all that interested me. I even added animations since I knew that could be a
+                cool feature for artists to use.
             </p>
+            <h3>First release</h3>
             <p>
                 I've done the first release of the mod on February 6 2025, 2 years after the beginning of
                 this project.<br>
@@ -264,29 +424,47 @@ TODO: portability of system functions
                 to get there was a great experience. The beginning of the project was exciting, followed by
                 months of boring decompilation, until Aphex and Tilman breakthrough, which unlocked our
                 ability to develop with our own code. Galeforce and LightningPirate were always here to
-                answer my questions, which would either be "no one knows how this work yet" or be very
-                precise and solve my issues. I could not have done it without each of them.
+                answer my questions, being amongst the oldest members still active. I could not have done it without
+                each of them.
                 <br>
             </p>
             <p>
                 When starting this project, I didn't have much self-confidence, and only ever did school
-                project that would re-invent the wheel. I wanted to complete the hardest possible project I
-                could think of, and I believe I finally succeeded in making my childhood dream a reality.
-                I've gained the habit regularly coding on the evening and I find it to be a greatly
-                satisfying activity. I'm much more confident in my ability to create and build things
-                and I have lots of ideas for future projects. If I had an advice to my past self it would be
-                to go for it now and think about it later. I'm grateful that I was very bored at that
-                point in my life to start what I always wanted to do. I feel that with the amount of
-                entertainement of today, I was rarely bored enough to let my brain become very willing to
-                build or create things. Now, I just wish I had more time to build what I want.
+                project that would re-invent the wheel over and over again. I wanted to complete the hardest possible
+                project I could think of, and I believe I finally succeeded in making my childhood dream a reality. I've
+                gained the habit of regularly coding on the evening and I find it to be a greatly satisfying activity.
+                I'm much more confident in my ability to create and build things and I have lots of ideas for future
+                projects. If I had an advice to my past self it would be to go for it now and think about it later.
             </p>
             <p>
                 I've always wanted to build tools to enable artists and this project is a good example of
                 that. In the community, Leadphalanx working on High Resolution pods and DigitalUnity who
-                made the lego mini pods are already stress showing what can be done with this new tool. I
-                wish one day we'll have remastered all the tracks and pods, but as unpaid contributors, I
+                made the lego mini pods are already showing what can be done with this new tool. I
+                wish one day we'll have remastered all the tracks and pods, but as community members, I
                 think we are already doing an amazing work.
-
+            </p>
+            <h3>Epilogue</h3>
+            <p>
+                While writing these two articles, LightningPirate shared his opinion on my work, which deeply touched
+                me. Here is what he has to say:
+            </p>
+            <p>
+                LightingPirate: "I don't want to tell you how to do your personal article but as a testimony I'd like to
+                say...<br>
+                <br>
+                Before you came along the modding scene was just a handful of guys working in isolation on our own
+                little projects with little crossover. None of us could really see the entire picture. Because of that,
+                the knowledge was all over the place. So when you came and synthesized it all and shared your vision,
+                that's when it finally felt like a group effort, all amounting to something impactful and benefiting all
+                modders. It is a high value skill to be able to understand and manage multiple projects like this, in
+                different languages/contexts, and merge them into one cohesive vision. That's something I would brag
+                about if I were you :HappyFud:".
+            </p>
+            <p>
+                Indeed, I don't think I'm very good at selling myself. I am very grateful I could share my vision for
+                this game with others, and that we could cooperate into creating something we can share with the larger
+                community of Star Wars Racer players. I hope my work will speak for itself and that people will like
+                playing this prettier version of the game.
             </p>
         </div>
     </main>

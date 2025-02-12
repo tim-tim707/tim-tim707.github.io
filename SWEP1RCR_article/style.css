@@ -30,14 +30,6 @@ video {
   border-radius: 8px;
 }
 
-@media (max-width: 800px) {
-
-  img,
-  video {
-    width: 100%;
-  }
-}
-
 .grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -48,4 +40,29 @@ video {
   width: 100%;
   height: auto;
   border-radius: 8px;
+}
+
+div {
+  font-size: 24px;
+}
+
+p.caption {
+  font-size: 22px;
+}
+
+@media (max-width: 800px) {
+
+  img,
+  video {
+    width: 100%;
+  }
+
+  div {
+    font-size: 18px;
+  }
+
+  p.caption {
+    font-size: 14px;
+  }
+
 }
