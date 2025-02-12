@@ -58,11 +58,10 @@ p.caption {
   }
 
   div {
-    font-size: 18px;
-  }
-
-  p.caption {
     font-size: 14px;
   }
 
+  p.caption {
+    font-size: 10px;
+  }
 }
