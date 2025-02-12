@@ -50,6 +50,10 @@ p.caption {
   font-size: 22px;
 }
 
+.language-C {
+  font-size: 18px;
+}
+
 @media (max-width: 800px) {
 
   img,
@@ -64,4 +68,9 @@ p.caption {
   p.caption {
     font-size: 10px;
   }
+
+  .language-C {
+    font-size: 10px;
+  }
+
 }

@@ -110,7 +110,7 @@
                 see if anything was popping out. Indeed, some strings already give valuable bits of
                 information
             </p>
-            <pre><code class="language-C", style="font-size: 18px;"> // Reference to rdroid
+            <pre><code class="language-C"> // Reference to rdroid
 D:\devel.QA5\pc_gnome\SpecPlat\rdroid_gnome\Source\elfCallback.c
 elfControl_ReplaceMapping(cid, fncStr, whichOne, bAnalogCapture, sign, lastBinding)
 elfControl_ReplaceMapping(cid, TXT_ROLL_RIGHT, whichOne, 1, -sign, lastBinding)
@@ -168,7 +168,7 @@ when the jawa grabs his cloak and starts pointing at the&lt;truncated here&gt;
             <p>
                 Let's take a look at some common functions in both engines.
             </p>
-            <pre><code class="language-C", style="font-size: 18px">// Example of output by Ghidra after having defined some types
+            <pre><code class="language-C">// Example of output by Ghidra after having defined some types
 void __cdecl rdMatrix_BuildRotate34(rdMatrix34 *out,rdVector3 *rot)
 {
   rdVector3 *prVar1;
@@ -203,7 +203,7 @@ void __cdecl rdMatrix_BuildRotate34(rdMatrix34 *out,rdVector3 *rot)
                 the data flows. In most cases though, the function references unknown global variables and call unknown
                 functions, and we have to go down the function calls in hope of finding more understandable structures.
             </p>
-            <pre><code class="language-C", style="font-size: 18px">// Example of the system API to be more portable
+            <pre><code class="language-C">// Example of the system API to be more portable
 typedef struct HostServices
 {
     uint32_t some_float;
@@ -255,7 +255,7 @@ typedef struct HostServices
                 game's api. Mainly Direct3D, DirectInput and Aureal3D, for graphics and sound. I've noticed a lot of
                 unknown pointers that would get dereferenced with offset and called afterward.
             </p>
-            <pre><code class="language-C", style="font-size: 18px">// Some weird looking variables
+            <pre><code class="language-C">// Some weird looking variables
 iVar2 = (**(code **)(*local_5c0 + 0x2c))();
 // Some binary blob being passed to one of the function
 binaryBlobData = 82 e6 44 59 2e c9 cf 11 bf c7 44 45 53 54 00 00 // in reality, just an address to those bytes
@@ -340,7 +340,6 @@ iVar2 = (**(code **)*puVar6)(puVar6,&binaryBlobData);
                 He is the one that knows most about the game assets, and was the first to
                 decompress, modify and recompress a binary asset block into the game,
                 which was an important milestone for this project.
-                (https://discord.com/channels/441839750555369474/441842584592056320/1177552168392347648)
             </p>
             <video width="600" muted controls>
                 <source src="leadphalanx_asset_block_insertion.mp4" type="video/mp4">
