@@ -1,0 +1,6 @@
+[submodule "web_scenegraph"]
+	path = web_scenegraph
+	url = git@github.com:tim-tim707/web_scenegraph.git
+[submodule "terrafirmacraft_anvil_calculator"]
+	path = terrafirmacraft_anvil_calculator
+	url = git@github.com:tim-tim707/terrafirmacraft_anvil_calculator.git
